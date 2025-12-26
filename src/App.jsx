@@ -49,6 +49,7 @@ export default function App() {
           transition={{ duration: 0.8 }}
           className="countdown-box"
         >
+          <h1 className="title">Riya💖</h1>
           <h1 className="title">Birthday Countdown 🎉</h1>
           <div className="countdown">{formatTime()}</div>
 
