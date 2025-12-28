@@ -19,19 +19,17 @@ export default function Wishes() {
   const finalStepRef = useRef(null);
   
   const messageText = `
-  On your special day, I want to tell you something truly from the heart...
-  
-  You are the kind of person who brings warmth wherever you go.
-  Your smile heals, your presence comforts,
-  and your kindness creates its own little universe of love.
+  Happpyyyy Birthhdayyyy my jaan, my sunshine, my heart’s favorite person! 🥳💖
+You are the warmth in my days, the softness in my nights, and the reason behind my happiest smiles. Mi tula khup prem karato… more than words can ever describe 😚🧿
 
-  I hope this year gives you every joy, every dream, and every moment that you truly deserve.
+Every moment with you feels like a blessing. Our late night talks, our silly jokes, our cozy weekends, our cute fights, and every small memory we create together makes our story so beautiful. You bring magic into my life without even trying. When you smile, the whole world feels calm. And when you laugh, it becomes my favorite sound.
 
-  You are cherished.
-  You are appreciated.
-  You are loved — more than words can ever describe.
+I am so proud of you, of your strength, your kindness, your brilliance, and the way you handle everything that comes your way. You inspire me every single day. Tumhi mazi khushi aahat… in every possible way.
 
-  Happy Birthday, with all my heart 💖✨
+I promise to stay by your side in every season, in calm moments, in storms, in joy, in all our crazy dreams and plans. I want to see the whole world with you, live every moment with you, and hold your hand through it all.
+
+Stay happy, stay blessed, and never forget how deeply you are loved.
+Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
   `;
 
   // Handle window resize for confetti
@@ -164,7 +162,7 @@ export default function Wishes() {
       {/* Step 0: Initial - Light Up Button */}
       {step === 0 && (
         <div className="step-container">
-          <h1 className="title">🎉 Happy Birthday! 🎂</h1>
+          <h1 className="title">🎉 Happy Birthday Riyuu! 🎂</h1>
           <p className="subtitle">Let's light up the celebration! 💡</p>
           <button className="action-btn glow-btn" onClick={handleLightUp}>
             ✨ Light Up the Party! ✨
@@ -249,17 +247,17 @@ export default function Wishes() {
       {/* Step 4: Confetti Celebration */}
       {step === 4 && (
         <div className="step-container celebration">
-          <h1 className="title big-celebration">🎉 HAPPY BIRTHDAY! 🎉</h1>
+          <h1 className="title big-celebration">🎉 HAPPY BIRTHDAY MUMMA! 🎉</h1>
           <div className="confetti-emoji">🎊 🎈 🎉 🥳 🎁</div>
-          <p className="subtitle">Wishing you all the happiness in the world! ✨</p>
+          <p className="subtitle">Love Uhh and Happy Birthday My Sweetheart ✨</p>
         </div>
       )}
 
       {/* Step 5: Birthday Wish */}
       {step === 5 && (
         <div className="step-container">
-          <h1 className="title">🎂 Happy Birthday! 🎂</h1>
-          <div className="heart-message">💖 May your day be filled with joy and laughter! 💖</div>
+          <h1 className="title">🎂 Happy Birthday Riyuuu Baby! 🎂</h1>
+          <div className="heart-message">💖 Love Uhh Mumma We Love You Soooo Much Ummmmmaa 💖</div>
           <div className="sparkle-animation">✨ ✨ ✨</div>
         </div>
       )}
