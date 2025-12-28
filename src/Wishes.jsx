@@ -12,22 +12,26 @@ export default function Wishes() {
     height: typeof window !== 'undefined' ? window.innerHeight : 800,
   });
   const [typedText, setTypedText] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
   
   const audioRef = useRef(null);
-  const cakeVideoRef = useRef(null);
+  const videoRef = useRef(null);
+  const finalStepRef = useRef(null);
   
   const messageText = `
-  Happpyyyy Birthhdayyyy my jaan, my sunshine, my heart’s favorite person Riyuuuuuuuuuu! 🥳💖
-You are the warmth in my days, the softness in my nights, and the reason behind my happiest smiles. Mi tula khup prem karato… more than words can ever describe 😚🧿
+  On your special day, I want to tell you something truly from the heart...
+  
+  You are the kind of person who brings warmth wherever you go.
+  Your smile heals, your presence comforts,
+  and your kindness creates its own little universe of love.
 
-Every moment with you feels like a blessing. Our late night talks, our silly jokes, our cozy weekends, our cute fights, and every small memory we create together makes our story so beautiful. You bring magic into my life without even trying. When you smile, the whole world feels calm. And when you laugh, it becomes my favorite sound.
+  I hope this year gives you every joy, every dream, and every moment that you truly deserve.
 
-I am so proud of you, of your strength, your kindness, your brilliance, and the way you handle everything that comes your way. You inspire me every single day. Tumhi mazi khushi aahat… in every possible way.
+  You are cherished.
+  You are appreciated.
+  You are loved — more than words can ever describe.
 
-I promise to stay by your side in every season, in calm moments, in storms, in joy, in all our crazy dreams and plans. I want to see the whole world with you, live every moment with you, and hold your hand through it all.
-
-Stay happy, stay blessed, and never forget how deeply you are loved.
-Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
+  Happy Birthday, with all my heart 💖✨
   `;
 
   // Handle window resize for confetti
@@ -71,6 +75,14 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
     return () => clearInterval(interval);
   }, [step]);
 
+  // Reset scroll when final step appears
+  useEffect(() => {
+    if (step === 6 && finalStepRef.current) {
+      window.scrollTo(0, 0);
+      finalStepRef.current.scrollTop = 0;
+    }
+  }, [step]);
+
   const handleLightUp = () => {
     setLightsOn(true);
     setTimeout(() => setStep(1), 500);
@@ -96,16 +108,17 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
     const blowSound = new Audio("https://assets.mixkit.co/sfx/preview/mixkit-candle-blow-738.mp3");
     blowSound.play();
     
-    setTimeout(() => {
-      setStep(4); // Show confetti
-    }, 800);
+    // Show confetti
+    setShowConfetti(true);
+    setStep(4);
     
     setTimeout(() => {
-      setStep(5); // Show birthday message
+      setStep(5);
     }, 3000);
     
     setTimeout(() => {
-      setStep(6); // Show final message with video
+      setStep(6);
+      setShowConfetti(false);
     }, 5000);
   };
 
@@ -138,7 +151,7 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
       style={getBackgroundStyle()}
     >
       {/* Confetti */}
-      {step >= 4 && (
+      {showConfetti && (
         <Confetti
           width={windowSize.width}
           height={windowSize.height}
@@ -183,9 +196,9 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
               <div className="cake-middle"></div>
               <div className="cake-bottom"></div>
               
-              {/* Candles */}
+              {/* Candles - FIXED VERSION */}
               {candlesLit && (
-                <>
+                <div className="candles-container">
                   <div className="candle">
                     <div className="flame"></div>
                     <div className="candle-body"></div>
@@ -206,7 +219,7 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
                     <div className="flame"></div>
                     <div className="candle-body"></div>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -251,45 +264,62 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
         </div>
       )}
 
-      {/* Step 6: Final Message with Video */}
+      {/* Step 6: Final Message with Video - FIXED SCROLLING ISSUE */}
       {step === 6 && (
-        <div className="step-container final-step">
-          <h1 className="title">A Special Message For You 💌</h1>
-          
-          
-          
-          <div className="typed-message">
-            {typedText.split("\n").map((line, i) => (
-              <p key={i}>{line}</p>
-            ))}
-          </div>
-          <div className="video-wrapper">
-            <video
-              ref={cakeVideoRef}
-              src="/videos/birthday-video.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="birthday-video"
-            />
-          </div>
-          
-          {musicPlaying && (
-            <div className="music-controls">
-              <button 
-                className="music-btn-small"
-                onClick={() => {
-                  if (audioRef.current) {
-                    audioRef.current.pause();
-                    setMusicPlaying(false);
-                  }
-                }}
-              >
-                🔇 Pause Music
-              </button>
+        <div className="final-step-container" ref={finalStepRef}>
+          <div className="final-step-content">
+            <h1 className="title">A Special Message For You 💌</h1>
+            
+            {/* Video container with fixed position */}
+            <div className="video-container-fixed">
+              <video
+                ref={videoRef}
+                src="/videos/birthday-video.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="birthday-video-fixed"
+              />
             </div>
-          )}
+            
+            {/* Message container with scrollable content */}
+            <div className="message-container-scrollable">
+              <div className="typed-message-fixed">
+                {typedText.split("\n").map((line, i) => (
+                  <p key={i} className="message-line">{line}</p>
+                ))}
+              </div>
+              
+              {musicPlaying && (
+                <div className="music-controls-fixed">
+                  <button 
+                    className="music-btn-small"
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        setMusicPlaying(false);
+                      }
+                    }}
+                  >
+                    🔇 Pause Music
+                  </button>
+                  <button 
+                    className="music-btn-small"
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.play();
+                        setMusicPlaying(true);
+                      }
+                    }}
+                    style={{marginLeft: '10px'}}
+                  >
+                    🔊 Play Music
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
@@ -324,6 +354,11 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           max-width: 800px;
           margin: 0 auto;
           padding: 20px;
+          position: relative;
+          min-height: 80vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
         }
 
         @keyframes fadeIn {
@@ -413,7 +448,7 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           100% { box-shadow: 0 0 20px #ffd700; }
         }
 
-        /* Cake */
+        /* Cake - FIXED VERSION */
         .cake-container {
           margin: 40px auto;
           cursor: pointer;
@@ -465,28 +500,32 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        /* Candles */
-        .candle {
+        /* Candles Container - FIXED POSITIONING */
+        .candles-container {
           position: absolute;
-          top: -30px;
-          width: 10px;
-          height: 40px;
-          background: white;
-          border-radius: 5px;
+          top: -40px;
+          left: 0;
+          width: 100%;
+          display: flex;
+          justify-content: space-around;
+          padding: 0 15px;
+          z-index: 10;
         }
 
-        .candle:nth-child(1) { left: 50px; }
-        .candle:nth-child(2) { left: 80px; }
-        .candle:nth-child(3) { left: 110px; }
-        .candle:nth-child(4) { left: 140px; }
-        .candle:nth-child(5) { left: 170px; }
+        .candle {
+          position: relative;
+          width: 10px;
+          height: 40px;
+        }
 
         .candle-body {
           position: absolute;
+          top: 0;
           width: 100%;
           height: 100%;
           background: linear-gradient(white, #ffccff);
           border-radius: 5px;
+          box-shadow: 0 0 5px rgba(255,255,255,0.5);
         }
 
         .flame {
@@ -500,11 +539,13 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           border-radius: 50% 50% 20% 20%;
           animation: flicker 0.5s infinite alternate;
           box-shadow: 0 0 20px orange;
+          z-index: 11;
         }
 
         @keyframes flicker {
-          0% { transform: translateX(-50%) scale(1); }
-          100% { transform: translateX(-50%) scale(1.1); }
+          0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+          50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+          100% { transform: translateX(-50%) scale(0.9); opacity: 0.9; }
         }
 
         /* Popup */
@@ -555,31 +596,68 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           50% { transform: scale(1.5); opacity: 1; }
         }
 
-        /* Video */
-        .video-wrapper {
-          margin: 30px auto;
-          width: 100%;
-          max-width: 500px;
+        /* FINAL STEP - FIXED LAYOUT */
+        .final-step-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, #ff4d79, #ff78b5, #ffa8e6);
+          animation: bgMove 8s ease infinite;
+          overflow-y: auto; /* Allow scrolling for the entire container */
+          -webkit-overflow-scrolling: touch;
         }
 
-        .birthday-video {
+        .final-step-content {
+          max-width: 1000px;
+          margin: 0 auto;
+          padding: 20px;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* Fixed Video Container */
+        .video-container-fixed {
+          width: 100%;
+          max-width: 500px;
+          margin: 20px auto;
+          flex-shrink: 0; /* Prevent video from shrinking */
+        }
+
+        .birthday-video-fixed {
           width: 100%;
           border-radius: 20px;
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          object-fit: cover;
+          max-height: 300px;
         }
 
-        /* Typed Message */
-        .typed-message {
-          margin: 30px auto;
+        /* Scrollable Message Container */
+        .message-container-scrollable {
+          flex: 1;
+          margin-top: 20px;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          max-height: 50vh;
+        }
+
+        .typed-message-fixed {
           padding: 25px;
           font-size: 1.1rem;
           line-height: 1.8;
           background: rgba(255, 255, 255, 0.1);
           border-radius: 20px;
           backdrop-filter: blur(10px);
-          max-width: 600px;
-          text-align: left;
           border: 1px solid rgba(255, 255, 255, 0.2);
+          margin-bottom: 20px;
+          animation: fadeIn 1s ease;
+        }
+
+        .message-line {
+          margin-bottom: 10px;
+          min-height: 1.8em;
         }
 
         /* Celebration Elements */
@@ -639,6 +717,10 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           margin-top: 20px;
           font-size: 1.2rem;
           color: rgba(255, 255, 255, 0.9);
+          padding: 10px 20px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          display: inline-block;
         }
 
         /* Skip Button */
@@ -663,8 +745,15 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
         }
 
         /* Music Controls */
-        .music-controls {
-          margin-top: 20px;
+        .music-controls-fixed {
+          margin: 20px 0;
+          padding: 15px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          flex-wrap: wrap;
         }
 
         .music-btn-small {
@@ -676,6 +765,7 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           cursor: pointer;
           font-size: 1rem;
           transition: all 0.3s;
+          white-space: nowrap;
         }
 
         .music-btn-small:hover {
@@ -717,20 +807,33 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
             width: 150px;
           }
           
-          .candle:nth-child(1) { left: 40px; }
-          .candle:nth-child(2) { left: 65px; }
-          .candle:nth-child(3) { left: 90px; }
-          .candle:nth-child(4) { left: 115px; }
-          .candle:nth-child(5) { left: 140px; }
-          
-          .typed-message {
-            font-size: 1rem;
-            padding: 15px;
-            margin: 20px 10px;
+          .candles-container {
+            top: -30px;
+            padding: 0 10px;
           }
           
-          .confetti-emoji {
-            font-size: 2rem;
+          .candle {
+            width: 8px;
+            height: 30px;
+          }
+          
+          .flame {
+            top: -20px;
+            width: 12px;
+            height: 20px;
+          }
+          
+          .typed-message-fixed {
+            font-size: 1rem;
+            padding: 15px;
+          }
+          
+          .birthday-video-fixed {
+            max-height: 250px;
+          }
+          
+          .message-container-scrollable {
+            max-height: 40vh;
           }
         }
 
@@ -757,36 +860,75 @@ Happpyyyy Birthhdayyyy my baby, my shona, my forever girl 🫶💋💋🧿
           .cake-top {
             width: 100px;
             left: 10px;
+            height: 30px;
           }
           
           .cake-middle {
             width: 110px;
             left: 5px;
             top: 25px;
+            height: 30px;
           }
           
           .cake-bottom {
             width: 120px;
             top: 45px;
+            height: 40px;
+          }
+          
+          .candles-container {
+            top: -25px;
+            padding: 0 5px;
           }
           
           .candle {
-            width: 8px;
-            height: 30px;
-            top: -20px;
+            width: 6px;
+            height: 25px;
           }
-          
-          .candle:nth-child(1) { left: 30px; }
-          .candle:nth-child(2) { left: 50px; }
-          .candle:nth-child(3) { left: 70px; }
-          .candle:nth-child(4) { left: 90px; }
-          .candle:nth-child(5) { left: 110px; }
           
           .flame {
             top: -15px;
-            width: 12px;
-            height: 20px;
+            width: 10px;
+            height: 15px;
           }
+          
+          .birthday-video-fixed {
+            max-height: 200px;
+          }
+          
+          .message-container-scrollable {
+            max-height: 35vh;
+          }
+          
+          .music-controls-fixed {
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .music-btn-small {
+            width: 100%;
+            max-width: 200px;
+          }
+        }
+
+        /* Prevent overscroll on iOS */
+        .final-step-container {
+          overscroll-behavior: contain;
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .message-container-scrollable::-webkit-scrollbar {
+          width: 5px;
+        }
+        
+        .message-container-scrollable::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        
+        .message-container-scrollable::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 10px;
         }
       `}</style>
     </div>
